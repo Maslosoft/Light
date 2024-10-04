@@ -2,7 +2,7 @@
 
 use Maslosoft\Light\Traits;
 
-use Swoole\Coroutine\Context;
+use Maslosoft\Light\Context;
 
 trait Fly {
     public static function fly($instanceId) {

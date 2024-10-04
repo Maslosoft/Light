@@ -4,6 +4,7 @@ namespace Maslosoft\Light\Context;
 
 use Swoole\Coroutine\Context as SwooleContext;
 use Maslosoft\Light\Contexts\Steady;
+use Maslosoft\Light\ContextManager;
 
 class Context
 {
@@ -33,13 +34,6 @@ class Context
     {
       return;
     }
-    if(class_exists(SwooleContext::class, true))
-    {
-      static::$contextClass = SwooleContext::class;
-      return;
-    }
-
-    // Finally, as a fallback use just static variables
-    static::$contextClass = Steady::class;
+    static::$contextClass = ContextManager::get();
   }
 }

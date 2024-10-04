@@ -20,4 +20,9 @@ class Steady
   {
     self::registry[$key] = $value;
   }
+
+  public static function isAvailable()
+  {
+    return true;
+  }
 }    

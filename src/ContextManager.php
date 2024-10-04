@@ -8,11 +8,18 @@ use Maslosoft\Light\Contexts\OpenSwoole;
 class ContextManager
 {
   public const MaxContextLifetime = 10 *60;
+
+  public const DefaultChanceOfPurge = 0.01
   
   /**
    * Maximum context lifetime
    */
   public static $maxLifetime = self::MaxContextLifetime;
+
+  /**
+   * Percent chance of runnig purge if using maybePurge();
+   */
+  public static $purgeChance = self::DefaultChanceOfPurge;
   
   /**
    * Contexts to check availabiliti in order of preference
@@ -44,6 +51,15 @@ class ContextManager
             // Remove stale resource
             self::$selectedContex::delete($key);
         }
+    }
+  }
+
+  public function maybePurge()
+  {
+    // Purge by chance
+    if (random_int(1, 100) <= self::$purgeChance * 100)
+    {
+      static::purge();
     }
   }
 

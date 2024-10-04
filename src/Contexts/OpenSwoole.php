@@ -20,6 +20,16 @@ class OpenSwoole
   {
     return Context::put($key, $value);
   }
+
+  public static function list()
+  {
+    return Context::list();
+  }
+
+  public static function delete($key)
+  {
+    return Context::delete($key);
+  }
   
   public static function isAvailable()
   {

@@ -7,6 +7,13 @@ use Maslosoft\Light\Contexts\OpenSwoole;
 
 class ContextManager
 {
+  public const MaxContextLifetime = 10 *60;
+  
+  /**
+   * Maximum context lifetime
+   */
+  public static $maxLifetime = self::MaxContextLifetime;
+  
   /**
    * Contexts to check availabiliti in order of preference
    */
@@ -16,11 +23,6 @@ class ContextManager
   ];
 
   private static $selectedContext = null;
-
-  public static function purge()
-  {
-    static::init();
-  }
 
   /**
    * Get beset available context class
@@ -34,7 +36,15 @@ class ContextManager
   public static function purge()
   {
     static::init();
-    self::$selectedContext::purge();
+    $now = time();
+
+    foreach (self::$selectedContext::list() as $key) {
+        $data = self::$selectedContext::get($key);
+        if (($now - $data['last_used']) > static::$maxLifetime) {
+            // Remove stale resource
+            self::$selectedContex::delete($key);
+        }
+    }
   }
 
   private static function init()

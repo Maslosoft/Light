@@ -31,6 +31,12 @@ class ContextManager
     return static::$selectedContext;
   }
 
+  public static function purge()
+  {
+    static::init();
+    self::$selectedContext::purge();
+  }
+
   private static function init()
   {
     // Check if initialized

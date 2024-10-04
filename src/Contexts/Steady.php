@@ -21,6 +21,16 @@ class Steady
     self::registry[$key] = $value;
   }
 
+  public static function list()
+  {
+    return self::registry;
+  }
+
+  public static function delete($key)
+  {
+    unset(self::registry[$key]);
+  }
+  
   public static function isAvailable()
   {
     return true;

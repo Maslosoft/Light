@@ -28,6 +28,7 @@ class ContextManager
   public static function get()
   {
     static::init():
+    return static::$selectedContext;
   }
 
   private static function init()

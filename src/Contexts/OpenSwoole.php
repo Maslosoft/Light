@@ -31,7 +31,7 @@ class OpenSwoole
     return Context::delete($key);
   }
   
-  public static function isAvailable()
+  public static function isAvailable(): bool
   {
     return class_exists(Context::class, true);
   }

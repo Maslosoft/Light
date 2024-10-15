@@ -1,0 +1,30 @@
+{
+    "name": "maslosoft/light",
+    "description": "Flyweight Implementation for PHP Application Servers",
+    "type": "library",
+    "require-dev": {
+        "codeception/codeception": "^5.1",
+        "codeception/module-asserts": "^3.0",
+        "openswoole/core": "^22.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Maslosoft\\Light\\": "src/"
+        },
+        "files": [
+            "src/constants.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Maslosoft\\Light\\Tests\\Models\\": "tests/Models"
+        }
+    },
+    "authors": [
+        {
+            "name": "Peter Maselkowski",
+            "email": "office@maslosoft.com"
+        }
+    ]
+}

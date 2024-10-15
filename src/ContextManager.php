@@ -7,75 +7,79 @@ use Maslosoft\Light\Contexts\OpenSwoole;
 
 class ContextManager
 {
-  public const MaxContextLifetime = 10 *60;
+	public const int MaxContextLifetime = 10 * 60;
 
-  public const DefaultChanceOfPurge = 0.01
-  
-  /**
-   * Maximum context lifetime
-   */
-  public static $maxLifetime = self::MaxContextLifetime;
+	public const float DefaultChanceOfPurge = 0.01;
 
-  /**
-   * Percent chance of runnig purge if using maybePurge();
-   */
-  public static $purgeChance = self::DefaultChanceOfPurge;
-  
-  /**
-   * Contexts to check availabiliti in order of preference
-   */
-  public static $contexts = [
-    OpenSwoole::class,
-    Steady::class,
-  ];
+	public const array DefaultContexts = [
+		OpenSwoole::class,
+		Steady::class,
+	];
 
-  private static $selectedContext = null;
+	/**
+	 * Maximum context lifetime
+	 */
+	public static int $maxLifetime = self::MaxContextLifetime;
 
-  /**
-   * Get beset available context class
-   */
-  public static function get()
-  {
-    static::init():
-    return static::$selectedContext;
-  }
+	/**
+	 * Percent chance of running purge if using maybePurge();
+	 */
+	public static float $purgeChance = self::DefaultChanceOfPurge;
 
-  public static function purge()
-  {
-    static::init();
-    $now = time();
+	/**
+	 * Contexts to check availability in order of preference
+	 */
+	public static array $contexts = self::DefaultContexts;
 
-    foreach (self::$selectedContext::list() as $key) {
-        $data = self::$selectedContext::get($key);
-        if (($now - $data['last_used']) > static::$maxLifetime) {
-            // Remove stale resource
-            self::$selectedContex::delete($key);
-        }
-    }
-  }
+	private static string|Context|null $selectedContext = null;
 
-  public function maybePurge()
-  {
-    // Purge by chance
-    if (random_int(1, 100) <= self::$purgeChance * 100)
-    {
-      static::purge();
-    }
-  }
+	/**
+	 * Get beset available context class
+	 */
+	public static function get(): string|Context|null
+	{
+		static::init();
+		return static::$selectedContext;
+	}
 
-  private static function init()
-  {
-    // Check if initialized
-    if(self::$selectedContext !== null)
-    {
-      return;
-    }
-    foreach(static::$contexts as $context)
-    {
-      if($context::isAvailable())
-      {
-        static::$selectedContext = $context;
-      }
-    }
-  }
+	public static function purge(): void
+	{
+		static::init();
+		$now = time();
+
+		foreach (self::$selectedContext::list() as $key)
+		{
+			$data = self::$selectedContext::get($key);
+			if (($now - $data[LastUsed]) > static::$maxLifetime)
+			{
+				// Remove stale resource
+				self::$selectedContext::delete($key);
+			}
+		}
+	}
+
+	public function maybePurge(): void
+	{
+		// Purge by chance
+		if (random_int(1, 100) <= self::$purgeChance * 100)
+		{
+			static::purge();
+		}
+	}
+
+	private static function init(): void
+	{
+		// Check if initialized
+		if (self::$selectedContext !== null)
+		{
+			return;
+		}
+		foreach (static::$contexts as $context)
+		{
+			if ($context::isAvailable())
+			{
+				static::$selectedContext = $context;
+			}
+		}
+	}
 }    

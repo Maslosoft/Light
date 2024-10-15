@@ -1,39 +1,52 @@
 <?php
 
-use Maslosoft\Light\Traits;
+namespace Maslosoft\Light\Traits;
 
 use Maslosoft\Light\Context;
+use const Maslosoft\Light\CreatedAt;
+use const Maslosoft\Light\Instance;
+use const Maslosoft\Light\LastUsed;
 
-trait Fly {
-    public static function fly($instanceId) {
-        // Generate a unique context key based on class and instance ID
-        $contextKey = static::class . '.' . $instanceId;
+trait Fly
+{
 
-        // Check if the instance already exists in the current context
-        if (Context::exists($contextKey)) {
-            $data = Context::get($key);
-            $data['last_used'] = $now;
-            Context::put($key, $data);
-            return $data['instance'];
-        }
+	public const string|int|float DefaultInstanceId = 'default';
 
-        // Create a new instance using the abstract newInstance method
-        $instance = static::newInstance($instanceId);
+	/**
+	 * @param string|int|float|null $instanceId
+	 * @return static
+	 */
+	public static function fly(string|int|float|null $instanceId = null): static
+	{
+		if ($instanceId === null)
+		{
+			$instanceId = static::DefaultInstanceId;
+		}
+		// Generate a unique context key based on class and instance ID
+		$key = static::class . '.' . $instanceId;
+		$now = time();
 
-        Context::put($key, [
-            'instance' => $instance,
-            'created_at' => $now,
-            'last_used' => $now
-        ]);
+		// Check if the instance already exists in the current context
+		if (Context::has($key))
+		{
+			$data = Context::get($key);
+			$data[LastUsed] = $now;
+			Context::put($key, $data);
+			return $data[Instance];
+		}
 
-        return $object;
-      
-        // Store the instance in the context with the class-based key
-        Context::put($contextKey, $instance);
+		// Create a new instance using the abstract newInstance method
+		$instance = static::newInstance($instanceId);
 
-        return $instance;
-    }
+		Context::put($key, [
+			Instance => $instance,
+			CreatedAt => $now,
+			LastUsed => $now
+		]);
 
-    // This method should be implemented by the class using the trait
-    abstract protected static function newInstance($instanceId);
+		return $instance;
+	}
+
+	// This method should be implemented by the class using the trait
+	abstract protected static function newInstance($instanceId);
 }

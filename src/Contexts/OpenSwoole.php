@@ -2,7 +2,7 @@
 
 namespace Maslosoft\Light\Contexts;
 
-use Swoole\Coroutine\Context;
+use OpenSwoole\Coroutine\Context;
 
 class OpenSwoole
 {
